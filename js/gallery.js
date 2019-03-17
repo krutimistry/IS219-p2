@@ -106,11 +106,17 @@ if ($_GET["json"]){
 //You can optionally use the following function as your event callback for loading the source of Images from your json data (for HTMLImageObject).
 //@param A GalleryImage object. Use this method for an event handler for loading a gallery Image object (optional).
 function makeGalleryImageOnloadCallback(galleryImage) {
-	return function(e) {
-		galleryImage.img = e.target;
-		mImages.push(galleryImage);
-	}
-}
+    return function(e) {
+        galleryImage.img = e.target;
+        mImages.push(galleryImage);
+    }
+} //when doc loads, have these going/active i guess
+$(document).ready( function() {
+    $('.details').eq(0).hide();
+    deets();
+    goBack();
+    goFor();
+});
 
 $(document).ready( function() {
 	
