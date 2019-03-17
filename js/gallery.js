@@ -43,12 +43,22 @@ function GalleryImage(location, description, date, image) {
 
 //swapPhotos functions
 function swapPhoto() {
-	//Add code here to access the #slideShow element.
-	//Access the img element and replace its source
-	//with a new image from your images array which is loaded 
-	//from the JSON string
-	console.log('swap photo');
-}
+	if(prevClicked){
+		if(mCurrentIndex > 0) {
+			mCurrentIndex--;
+		} else {
+			mCurrentIndex = mImages.length-1;
+		};
+	}else {
+		if(mCurrentIndex < mImages.length-1) {
+			mCurrentIndex++;
+		} else {
+			mCurrentIndex = 0;
+		};
+	};
+
+	setPhoto();
+};
 
 // Counter for the mImages array
 var mCurrentIndex = 0;
