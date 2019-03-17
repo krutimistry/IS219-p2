@@ -179,18 +179,12 @@ function makeGalleryImageOnloadCallback(galleryImage) {
         mImages.push(galleryImage);
     }
 }
+
 $(document).ready( function() {
-    $('.details').eq(0).hide();
+    $('.details').eq(0).hide();	// This initially hides the photos' metadata information
     imageDetails()s();
     goBackward();
     goForward();
-});
-
-$(document).ready( function() {
-	
-	// This initially hides the photos' metadata information
-	$('.details').eq(0).hide();
-	
 });
 
 window.addEventListener('load', function() {
