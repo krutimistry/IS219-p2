@@ -55,19 +55,25 @@ var mJson;
 // URL for the JSON to load by default
 // Some options for you are: images.json, images.short.json; you will need to create your own extra.json later
 var mUrl = 'images.json';
+
 var mRequest = new XMLHttpRequest();
 mRequest.onreadystatechange = function() {
-// Do something interesting if file is opened successfully
-    if (mRequest.readyState == 4 && mRequest.status == 200) {
-        try {
-// Let’s try and see if we can parse JSON
-            mJson = JSON.parse(mRequest.responseText);
-// Let’s print out the JSON; It will likely show as "obj"
-            console.log(mJson);
-        } catch(err) {
-            console.log(err.message)
-        }
-    }
+	// Do something interesting if file is opened successfully
+	if (mRequest.readyState == 4 && mRequest.status == 200) {
+		try {
+			mJson = JSON.parse(mRequest.responseText);
+			for(var i = 0; i<mJson.images.length; i++) {
+				var imgloc = mJson.images[i].imgPath;
+				var loca = mJson.images[i].imgLocation;
+				var desc = mJson.images[i].description;
+				var d = mJson.images[i].date;
+				mImages.push(new GalleryImage(imgloc, loca, desc, d));
+			}
+			console.log(mJson);
+		} catch(err) {
+			console.log(err.message);
+		}
+	}
 };
 mRequest.open("GET",mURL, true);
 mRequest.send();
