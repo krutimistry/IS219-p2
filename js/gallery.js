@@ -166,6 +166,7 @@ function imageDetails(){
     });
 };
 
+
 function makeGalleryImageOnloadCallback(galleryImage) {
     return function(e) {
         galleryImage.img = e.target;
@@ -179,6 +180,7 @@ $(document).ready( function() {
     goBackward();
     goForward();
 });
+
 
 window.addEventListener('load', function() {
 	
