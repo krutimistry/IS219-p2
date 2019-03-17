@@ -32,14 +32,52 @@ function animate() {
 
 /************* DO NOT TOUCH CODE ABOVE THIS LINE ***************/
 //Make GalleryImage Object function
-function GalleryImage(location, description, date, image) {
-	this.location = location;
-	this.description = description;
-	this.date = date;
-	this.image = image;
+function GalleryImage(path, place, descrp, d) {
+	this.location = place;
+	this.description = descrp;
+	this.date = d;
+	this.image = path;
 }
 
 //$GET Request
+
+
+
+// Array holding GalleryImage objects (see below).
+var mImages = [];
+// Holds the retrived JSON information
+var mJson;
+// URL for the JSON to load by default
+// Some options for you are: images.json, images.short.json; you will need to create your own extra.json later
+var mURL ="";
+if ($_GET["json"]){
+    mURL = $_GET["json"];
+}else{
+    mURL = "images.json";
+}
+
+// XMLHttpRequest
+var mRequest = new XMLHttpRequest();
+mRequest.onreadystatechange = function() {
+    // Do something interesting if file is opened successfully
+    if (mRequest.readyState == 4 && mRequest.status == 200) {
+        try {
+            mJson = JSON.parse(mRequest.responseText);
+            for(var i = 0; i<mJson.images.length; i++) {
+                var imgloc = mJson.images[i].imgPath;
+                var loca = mJson.images[i].imgLocation;
+                var desc = mJson.images[i].description;
+                var d = mJson.images[i].date;
+                mImages.push(new GalleryImage(imgloc, loca, desc, d));
+            }
+            console.log(mJson);
+        } catch(err) {
+            console.log(err.message);
+        }
+    }
+};
+mRequest.open("GET",mURL, true);
+mRequest.send();
 
 // Counter for the mImages array
 var mCurrentIndex = 0;
@@ -65,43 +103,6 @@ function swapPhoto() {
     setPhoto();
 };
 
-// XMLHttpRequest variable
-var mRequest = new XMLHttpRequest();
-mRequest.onreadystatechange = function() {
-	// Do something interesting if file is opened successfully
-	if (mRequest.readyState == 4 && mRequest.status == 200) {
-		try {
-			mJson = JSON.parse(mRequest.responseText);
-			for(var i = 0; i<mJson.images.length; i++) {
-				var imgloc = mJson.images[i].imgPath;
-				var loca = mJson.images[i].imgLocation;
-				var desc = mJson.images[i].description;
-				var d = mJson.images[i].date;
-				mImages.push(new GalleryImage(imgloc, loca, desc, d));
-			}
-			console.log(mJson);
-		} catch(err) {
-			console.log(err.message);
-		}
-	}
-};
-mRequest.open("GET",mURL, true);
-mRequest.send();
-
-// Array holding GalleryImage objects (see below).
-var mImages = [];
-
-// Holds the retrived JSON information
-var mJson;
-
-// URL for the JSON to load by default
-// Some options for you are: images.json, images.short.json; you will need to create your own extra.json later
-var mURL ="";
-if ($_GET["json"]){
-	mURL = $_GET["json"];
-}else{
-	mURL = "images.json";
-}
 
 //Set Photo to be displayed
 function setPhoto(){
@@ -113,7 +114,7 @@ function setPhoto(){
 
 //cycles backwards
 var prevClicked = false;
-function goBack(){
+function goBackward(){
     $('#prevPhoto').click(function(){
         prevClicked=true;
         if(mCurrentIndex === 0){
@@ -129,7 +130,7 @@ function goBack(){
     });
 };
 //cycles pictures forward and allows clicks through the slideshow
-function goFor(){
+function goForward(){
     $('#nextPhoto').click(function(){
         prevClicked=false;
         if(mCurrentIndex === mImages.length-1){
@@ -146,7 +147,7 @@ function goFor(){
 };
 
 //show and hide details of pictures
-function details(){
+function imageDetails(){
     $('.moreIndicator').click(function(){
         console.log(mCurrentIndex);
         if( $('.moreIndicator').hasClass('rot90')){
@@ -161,10 +162,6 @@ function details(){
     });
 };
 
-
-
-//You can optionally use the following function as your event callback for loading the source of Images from your json data (for HTMLImageObject).
-//@param A GalleryImage object. Use this method for an event handler for loading a gallery Image object (optional).
 function makeGalleryImageOnloadCallback(galleryImage) {
     return function(e) {
         galleryImage.img = e.target;
@@ -173,9 +170,9 @@ function makeGalleryImageOnloadCallback(galleryImage) {
 }
 $(document).ready( function() {
     $('.details').eq(0).hide();
-    deets();
-    goBack();
-    goFor();
+    imageDetails()s();
+    goBackward();
+    goForward();
 });
 
 $(document).ready( function() {
