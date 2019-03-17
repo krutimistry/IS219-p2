@@ -103,6 +103,47 @@ if ($_GET["json"]){
 	mURL = "images.json";
 }
 
+//Set Photo to be displayed
+function setPhoto(){
+    $('.photoHolder #photo').attr("src", mImages[mCurrentIndex].image);
+    $('.location').text('Location: ' + mImages[mCurrentIndex].location);
+    $('.description').text('Description: ' + mImages[mCurrentIndex].description);
+    $('.date').text('Date: ' + mImages[mCurrentIndex].date);
+}
+
+//cycles backwards
+var prevClicked = false;
+function goBack(){
+    $('#prevPhoto').click(function(){
+        prevClicked=true;
+        if(mCurrentIndex === 0){
+            mCurrentIndex = mImages.length-1;
+            setPhoto();
+            mLastFrameTime=0;
+
+        }else{
+            mCurrentIndex--;
+            setPhoto();
+            mLastFrameTime=0;
+        }
+    });
+};
+//cycles pictures forward and allows clicks through the slideshow
+function goFor(){
+    $('#nextPhoto').click(function(){
+        prevClicked=false;
+        if(mCurrentIndex === mImages.length-1){
+            mCurrentIndex = 0;
+            setPhoto();
+            mLastFrameTime=0;
+
+        }else{
+            mCurrentIndex++;
+            setPhoto();
+            mLastFrameTime=0;
+        }
+    });
+};
 
 //show and hide details of pictures
 function details(){
