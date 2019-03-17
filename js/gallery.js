@@ -31,7 +31,17 @@ function animate() {
 }
 
 /************* DO NOT TOUCH CODE ABOVE THIS LINE ***************/
+//Make GalleryImage Object function
+function GalleryImage(location, description, date, image) {
+	this.location = location;
+	this.description = description;
+	this.date = date;
+	this.image = image;
+}
 
+//$GET Request
+
+//swapPhotos functions
 function swapPhoto() {
 	//Add code here to access the #slideShow element.
 	//Access the img element and replace its source
@@ -44,18 +54,6 @@ function swapPhoto() {
 var mCurrentIndex = 0;
 
 // XMLHttpRequest variable
-var mRequest = new XMLHttpRequest();
-
-// Array holding GalleryImage objects (see below).
-var mImages = [];
-
-// Holds the retrived JSON information
-var mJson;
-
-// URL for the JSON to load by default
-// Some options for you are: images.json, images.short.json; you will need to create your own extra.json later
-var mUrl = 'images.json';
-
 var mRequest = new XMLHttpRequest();
 mRequest.onreadystatechange = function() {
 	// Do something interesting if file is opened successfully
@@ -77,6 +75,23 @@ mRequest.onreadystatechange = function() {
 };
 mRequest.open("GET",mURL, true);
 mRequest.send();
+
+// Array holding GalleryImage objects (see below).
+var mImages = [];
+
+// Holds the retrived JSON information
+var mJson;
+
+// URL for the JSON to load by default
+// Some options for you are: images.json, images.short.json; you will need to create your own extra.json later
+var mURL ="";
+if ($_GET["json"]){
+	mURL = $_GET["json"];
+}else{
+	mURL = "images.json";
+}
+
+
 
 //You can optionally use the following function as your event callback for loading the source of Images from your json data (for HTMLImageObject).
 //@param A GalleryImage object. Use this method for an event handler for loading a gallery Image object (optional).
@@ -101,9 +116,3 @@ window.addEventListener('load', function() {
 }, false);
 
 
-function GalleryImage(location, description, date, image) {
-	//implement me as an object to hold the following data about an image:
-	this.location = location;
-	this.description = description;
-	this.date = date;
-	this.image = image;
