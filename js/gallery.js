@@ -54,12 +54,8 @@ function getQueryParams(qs) {
 var $_GET = getQueryParams(document.location.search + '');
 
 
-// Array holding GalleryImage objects (see below).
+// Array holding GalleryImage objects
 var mImages = [];
-// Holds the retrived JSON information
-var mJson;
-// URL for the JSON to load by default
-// Some options for you are: images.json, images.short.json; you will need to create your own extra.json later
 var mURL ="";
 if ($_GET["json"]){
     mURL = $_GET["json"];
@@ -87,7 +83,7 @@ mRequest.onreadystatechange = function() {
         }
     }
 };
-mRequest.open("GET",mURL, true);
+mRequest.open("$GET",mURL, true);
 mRequest.send();
 
 // Counter for the mImages array
@@ -95,27 +91,24 @@ var mCurrentIndex = 0;
 
 //swapPhotos functions
 function swapPhoto() {
-	if (!prevClicked) {
-		if (mCurrentIndex < mImages.length - 1) {
-			mCurrentIndex++;
-		} else {
-			mCurrentIndex = 0;
-		}
-		;
-	} else {
-		if (mCurrentIndex > 0) {
-			mCurrentIndex--;
-		} else {
-			mCurrentIndex = mImages.length - 1;
-		}
-		;
-	};
+    if(prevClicked){
+        if(mCurrentIndex > 0) {
+            mCurrentIndex--;
+        } else {
+            mCurrentIndex = mImages.length-1;
+        };
+    }else {
+        if(mCurrentIndex < mImages.length-1) {
+            mCurrentIndex++;
+        } else {
+            mCurrentIndex = 0;
+        };
+    };
 
     setPhoto();
 };
 
-
-//Set Photo to be displayed
+//Set Photo to be display
 function setPhoto(){
     $('.photoHolder #photo').attr("src", mImages[mCurrentIndex].image);
     $('.location').text('Location: ' + mImages[mCurrentIndex].location);
