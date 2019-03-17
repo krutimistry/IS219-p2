@@ -119,6 +119,23 @@ if ($_GET["json"]){
 }
 
 
+//show and hide details of pictures
+function details(){
+    $('.moreIndicator').click(function(){
+        console.log(mCurrentIndex);
+        if( $('.moreIndicator').hasClass('rot90')){
+            $('.details').slideDown();
+            $('.moreIndicator').removeClass('rot90');
+            $('.moreIndicator').addClass('rot270');
+        }else{
+            $('.details').slideUp();
+            $('.moreIndicator').removeClass('rot270');
+            $('.moreIndicator').addClass('rot90');
+        }
+    });
+};
+
+
 
 //You can optionally use the following function as your event callback for loading the source of Images from your json data (for HTMLImageObject).
 //@param A GalleryImage object. Use this method for an event handler for loading a gallery Image object (optional).
