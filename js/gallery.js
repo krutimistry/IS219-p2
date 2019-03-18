@@ -31,7 +31,7 @@ function animate() {
 }
 
 /************* DO NOT TOUCH CODE ABOVE THIS LINE ***************/
-//Make GalleryImage Object function
+//GalleryImage Object function
 function GalleryImage(path, place, descrp, d) {
 	this.location = place;
 	this.description = descrp;
@@ -53,7 +53,6 @@ function getQueryParams(qs) {
 }
 var $_GET = getQueryParams(document.location.search + '');
 
-
 // Array holding GalleryImage objects
 var mImages = [];
 var mURL ="";
@@ -66,7 +65,6 @@ if ($_GET["json"]){
 // XMLHttpRequest
 var mRequest = new XMLHttpRequest();
 mRequest.onreadystatechange = function() {
-    // Do something interesting if file is opened successfully
     if (mRequest.readyState == 4 && mRequest.status == 200) {
         try {
             mJson = JSON.parse(mRequest.responseText);
@@ -173,10 +171,10 @@ function makeGalleryImageOnloadCallback(galleryImage) {
         mImages.push(galleryImage);
     }
 }
-
 $(document).ready( function() {
-    $('.details').eq(0).hide();	// This initially hides the photos' metadata information
-    imageDetails()s();
+    $('.details').eq(0).hide();
+    // This initially hides the photos' metadata information
+    imageDetails();
     goBackward();
     goForward();
 });
