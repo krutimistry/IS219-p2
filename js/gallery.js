@@ -51,36 +51,34 @@ function getQueryParams(qs) {
     }
     return params;
 }
-var $_GET = getQueryParams(document.location.search + '');
+var $_GET = getQueryParams(document.location.search);
 
+// XMLHttpRequest
+var mRequest = new XMLHttpRequest();
 //Holds the retrieved JSON information
 var mJson;
 //URL for the JSON to load by default
-
 var mImages = [];
-
+//retrieves images from images.json
 var mURL ="";
-if ($_GET["json"]){
+if ($_GET["json"] == undefined){
     mURL = $_GET["json"];
 }else{
     mURL = "images.json";
 }
 
-// XMLHttpRequest
-var mRequest = new XMLHttpRequest();
-
 mRequest.onreadystatechange = function() {
+
     if (mRequest.readyState == 4 && mRequest.status == 200) {
         try {
             mJson = JSON.parse(mRequest.responseText);
-            for(var i = 0; i<mJson.images.length; i++) {
-                var imgloc = mJson.images[i].imgPath;
-                var loca = mJson.images[i].imgLocation;
-                var desc = mJson.images[i].description;
-                var d = mJson.images[i].date;
-                mImages.push(new GalleryImage(imgloc, loca, desc, d));
-            }
             console.log(mJson);
+
+            for(var i=0; i < mJson.images.length;i++)
+            {
+                mImages.push(new GalleryImage(mJson.images[i].imgLocation,mJson.images[i].description,mJson.images[i].date,mJson.images[i].imgPath));
+            }
+
         } catch(err) {
             console.log(err.message);
         }
@@ -91,6 +89,13 @@ mRequest.send();
 
 // Counter for the mImages array
 var mCurrentIndex = 0;
+
+function makeGalleryImageOnloadCallback(galleryImage) {
+    return function(e) {
+        galleryImage.img = e.target;
+        mImages.push(galleryImage);
+    }
+}
 
 //swapPhotos functions
 function swapPhoto() {
@@ -109,79 +114,26 @@ function swapPhoto() {
     console.log('swap photo');
 }
 
-//Set Photo to be display
-function setPhoto(){
-    $('.photoHolder #photo').attr("src", mImages[mCurrentIndex].image);
-    $('.location').text('Location: ' + mImages[mCurrentIndex].location);
-    $('.description').text('Description: ' + mImages[mCurrentIndex].description);
-    $('.date').text('Date: ' + mImages[mCurrentIndex].date);
-}
-
-//cycles backwards
-var prevClicked = false;
-function goBackward(){
-    $('#prevPhoto').click(function(){
-        prevClicked=true;
-        if(mCurrentIndex === 0){
-            mCurrentIndex = mImages.length-1;
-            setPhoto();
-            mLastFrameTime=0;
-
-        }else{
-            mCurrentIndex--;
-            setPhoto();
-            mLastFrameTime=0;
-        }
-    });
-};
-//cycles pictures forward and allows clicks through the slideshow
-function goForward(){
-    $('#nextPhoto').click(function(){
-        prevClicked=false;
-        if(mCurrentIndex === mImages.length-1){
-            mCurrentIndex = 0;
-            setPhoto();
-            mLastFrameTime=0;
-
-        }else{
-            mCurrentIndex++;
-            setPhoto();
-            mLastFrameTime=0;
-        }
-    });
-};
-
-//show and hide details of pictures
-function imageDetails(){
-    $('.moreIndicator').click(function(){
-        console.log(mCurrentIndex);
-        if( $('.moreIndicator').hasClass('rot90')){
-            $('.details').slideDown();
-            $('.moreIndicator').removeClass('rot90');
-            $('.moreIndicator').addClass('rot270');
-        }else{
-            $('.details').slideUp();
-            $('.moreIndicator').removeClass('rot270');
-            $('.moreIndicator').addClass('rot90');
-        }
-    });
-};
-
-
-function makeGalleryImageOnloadCallback(galleryImage) {
-    return function(e) {
-        galleryImage.img = e.target;
-        mImages.push(galleryImage);
-    }
-}
 $(document).ready( function() {
+    //this initially hides the photos' metadata information
     $('.details').eq(0).hide();
-    // This initially hides the photos' metadata information
-    imageDetails();
-    goBackward();
-    goForward();
-});
 
+    $(".moreIndicator").click(function(){
+        $( "img.rot90" ).toggleClass("rot270",3000);
+        $(".details").slideToggle(1000);
+    });
+
+    $("#nextPhoto").click(function(){
+        swapPhoto();
+
+    });
+
+    $("#prevPhoto").click(function(){
+        mCurrentIndex -= 2;
+        swapPhoto();
+        console.log(mCurrentIndex);
+    });
+});
 
 window.addEventListener('load', function() {
 	
