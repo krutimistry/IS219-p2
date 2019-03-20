@@ -32,11 +32,11 @@ function animate() {
 
 /************* DO NOT TOUCH CODE ABOVE THIS LINE ***************/
 //GalleryImage Object function
-function GalleryImage(path, place, descrp, d) {
-	this.location = place;
-	this.description = descrp;
-	this.date = d;
-	this.image = path;
+function GalleryImage(imgLocation,description,date,imgPath){
+    this.imgLocation = imgLocation;
+    this.description = description;
+    this.date = date;
+    this.imgPath = imgPath;
 }
 
 //$GET Request
@@ -53,8 +53,12 @@ function getQueryParams(qs) {
 }
 var $_GET = getQueryParams(document.location.search + '');
 
-// Array holding GalleryImage objects
+//Holds the retrieved JSON information
+var mJson;
+//URL for the JSON to load by default
+
 var mImages = [];
+
 var mURL ="";
 if ($_GET["json"]){
     mURL = $_GET["json"];
@@ -64,6 +68,7 @@ if ($_GET["json"]){
 
 // XMLHttpRequest
 var mRequest = new XMLHttpRequest();
+
 mRequest.onreadystatechange = function() {
     if (mRequest.readyState == 4 && mRequest.status == 200) {
         try {
@@ -89,22 +94,20 @@ var mCurrentIndex = 0;
 
 //swapPhotos functions
 function swapPhoto() {
-    if(prevClicked){
-        if(mCurrentIndex > 0) {
-            mCurrentIndex--;
-        } else {
-            mCurrentIndex = mImages.length-1;
-        };
-    }else {
-        if(mCurrentIndex < mImages.length-1) {
-            mCurrentIndex++;
-        } else {
-            mCurrentIndex = 0;
-        };
-    };
+    if(mCurrentIndex < 0){
+        mCurrentIndex +=  mImages.length;
+    }
+    $("#photo").attr('src', mImages[mCurrentIndex].imgPath);
+    $(".location").text("Location: "+mImages[mCurrentIndex].imgLocation);
+    $(".description").text("Description: "+mImages[mCurrentIndex].description);
+    $(".date").text("Date: "+mImages[mCurrentIndex].date);
 
-    setPhoto();
-};
+    mCurrentIndex++;
+    if(mCurrentIndex >=  mImages.length){
+        mCurrentIndex = 0;
+    }
+    console.log('swap photo');
+}
 
 //Set Photo to be display
 function setPhoto(){
