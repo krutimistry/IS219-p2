@@ -1,15 +1,15 @@
 // requestAnim shim layer by Paul Irish
     window.requestAnimFrame = (function(){
-      return  window.requestAnimationFrame       || 
-              window.webkitRequestAnimationFrame || 
-              window.mozRequestAnimationFrame    || 
-              window.oRequestAnimationFrame      || 
-              window.msRequestAnimationFrame     || 
+      return  window.requestAnimationFrame       ||
+              window.webkitRequestAnimationFrame ||
+              window.mozRequestAnimationFrame    ||
+              window.oRequestAnimationFrame      ||
+              window.msRequestAnimationFrame     ||
               function(/* function */ callback, /* DOMElement */ element){
                 window.setTimeout(callback, 1000 / 60);
               };
     })();
-  
+
 
 // example code from mr doob : http://mrdoob.com/lab/javascript/requestanimationframe/
 
@@ -39,6 +39,26 @@ function GalleryImage(imgLocation,description,date,imgPath){
     this.imgPath = imgPath;
 }
 
+// Counter for the mImages array
+var mCurrentIndex = 0;
+
+//swapPhotos functions
+function swapPhoto() {
+    if(mCurrentIndex < 0){
+        mCurrentIndex +=  mImages.length;
+    }
+    $("#photo").attr('src', mImages[mCurrentIndex].imgPath);
+    $(".location").text("Location: "+mImages[mCurrentIndex].imgLocation);
+    $(".description").text("Description: "+mImages[mCurrentIndex].description);
+    $(".date").text("Date: "+mImages[mCurrentIndex].date);
+
+    mCurrentIndex++;
+    if(mCurrentIndex >=  mImages.length){
+        mCurrentIndex = 0;
+    }
+    console.log('swap photo');
+}
+
 //$GET Request
 function getQueryParams(qs) {
     qs = qs.split("+").join(" ");
@@ -60,11 +80,12 @@ var mJson;
 //URL for the JSON to load by default
 var mImages = [];
 //retrieves images from images.json
-var mURL ="";
-if ($_GET["json"] == undefined){
-    mURL = $_GET["json"];
+
+var mUrl;
+if($_GET["json"] == undefined){
+    mUrl = "images.json";
 }else{
-    mURL = "images.json";
+    mUrl = $_GET["json"];
 }
 
 mRequest.onreadystatechange = function() {
@@ -84,34 +105,14 @@ mRequest.onreadystatechange = function() {
         }
     }
 };
-mRequest.open("$GET",mURL, true);
+mRequest.open("GET",mUrl, true);
 mRequest.send();
-
-// Counter for the mImages array
-var mCurrentIndex = 0;
 
 function makeGalleryImageOnloadCallback(galleryImage) {
     return function(e) {
         galleryImage.img = e.target;
         mImages.push(galleryImage);
     }
-}
-
-//swapPhotos functions
-function swapPhoto() {
-    if(mCurrentIndex < 0){
-        mCurrentIndex +=  mImages.length;
-    }
-    $("#photo").attr('src', mImages[mCurrentIndex].imgPath);
-    $(".location").text("Location: "+mImages[mCurrentIndex].imgLocation);
-    $(".description").text("Description: "+mImages[mCurrentIndex].description);
-    $(".date").text("Date: "+mImages[mCurrentIndex].date);
-
-    mCurrentIndex++;
-    if(mCurrentIndex >=  mImages.length){
-        mCurrentIndex = 0;
-    }
-    console.log('swap photo');
 }
 
 $(document).ready( function() {
@@ -125,7 +126,6 @@ $(document).ready( function() {
 
     $("#nextPhoto").click(function(){
         swapPhoto();
-
     });
 
     $("#prevPhoto").click(function(){
@@ -136,9 +136,7 @@ $(document).ready( function() {
 });
 
 window.addEventListener('load', function() {
-	
+
 	console.log('window loaded');
 
 }, false);
-
-
