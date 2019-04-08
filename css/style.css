@@ -56,10 +56,18 @@ body {
 	width: 42px;
 }
 
+#prevPhoto:hover{
+	opacity: 0.5;
+}
+
 #nextPhoto {
 	height: 42px;
 	width: 42px;
     float: right;
+}
+
+#nextPhoto:hover{
+	opacity: 0.5;
 }
 
 .details p {
@@ -107,4 +115,12 @@ Make it animate nicely. You'll need CSS3 for this*/
 	-webkit-transition: all 1s ease;
 	-o-transition: all 1s ease;
 	transition: all 1s ease;
+}
+
+#nextPhoto:hover{
+	opacity: 0.5;
+}
+
+#prevPhoto:hover{
+	opacity: 0.5;
 }
